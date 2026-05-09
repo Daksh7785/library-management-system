@@ -1,0 +1,64 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Book {
+  id          String     @id @default(uuid())
+  title       String
+  author      String
+  copies      BookCopy[]
+}
+
+model BookCopy {
+  id             String         @id @default(uuid())
+  book           Book           @relation(fields: [bookId], references: [id])
+  bookId         String
+  conditionScore Int            @default(100)
+  rescueCount    Int            @default(0)
+  totalReaders   Int            @default(0)
+  longestJourney String?
+  retiredAt      DateTime?
+  retiredReason  String?
+  timeline       CopyTimeline[]
+  qrCode         CopyQR?
+}
+
+enum CopyEventType {
+  CHECKED_OUT
+  RETURNED
+  REPAIRED
+  RESCUED
+  ANNOTATED
+  LOST_AND_FOUND
+  RETIRED
+  DONATED
+}
+
+model CopyTimeline {
+  id          String        @id @default(uuid())
+  bookCopy    BookCopy      @relation(fields: [bookCopyId], references: [id])
+  bookCopyId  String
+  eventType   CopyEventType
+  actorId     String?
+  isAnonymous Boolean       @default(true)
+  note        String?       @db.VarChar(500)
+  locationTag String?
+  photoUrl    String?
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+}
+
+model CopyQR {
+  id             String   @id @default(uuid())
+  bookCopy       BookCopy @relation(fields: [bookCopyId], references: [id])
+  bookCopyId     String   @unique
+  qrToken        String   @unique
+  publicUrl      String
+  generatedAt    DateTime @default(now())
+  stickerPrinted Boolean  @default(false)
+}

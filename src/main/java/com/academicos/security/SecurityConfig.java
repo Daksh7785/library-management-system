@@ -31,7 +31,10 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/api/books/**", "/h2-console/**").permitAll()
+                .requestMatchers(
+                    "/", "/login", "/dashboard", "/books", "/book/**", "/profile", 
+                    "/api/auth/**", "/api/books/**", "/api/action/**", "/h2-console/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             );
         return http.build();

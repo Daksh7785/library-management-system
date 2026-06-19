@@ -1,7 +1,9 @@
 package com.academicos;
 
 import com.academicos.model.Book;
+import com.academicos.model.BookCopy;
 import com.academicos.model.Profile;
+import com.academicos.repository.BookCopyRepository;
 import com.academicos.repository.BookRepository;
 import com.academicos.repository.ProfileRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +18,10 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner demoData(BookRepository bookRepository, ProfileRepository profileRepository) {
+    public CommandLineRunner demoData(
+            BookRepository bookRepository, 
+            ProfileRepository profileRepository,
+            BookCopyRepository bookCopyRepository) {
         return args -> {
             // Seed Profiles
             if (profileRepository.count() == 0) {
@@ -32,6 +37,15 @@ public class Application {
                 bookRepository.save(new Book("book-2", "Artificial Intelligence: Foundations & Agents", "Prof. Arthur Pendelton", "9780262033848", "Explore machine learning core algorithms.", "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80", "Computer Science", 4.9, 38, 2023, 820, "en", true));
                 bookRepository.save(new Book("book-3", "Introduction to Algorithms", "Thomas H. Cormen", "9780262033849", "The standard textbook on algorithms and structures.", "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=400&q=80", "Computer Science", 4.7, 56, 2009, 1292, "en", true));
                 System.out.println("🌱 Database catalog seeded");
+            }
+
+            // Seed Book Copies
+            if (bookCopyRepository.count() == 0) {
+                bookCopyRepository.save(new BookCopy("copy-1-1", "book-1", "QR-PHY-001", 95, "available", "Shelf A-1"));
+                bookCopyRepository.save(new BookCopy("copy-1-2", "book-1", "QR-PHY-002", 80, "issued", "Shelf A-1"));
+                bookCopyRepository.save(new BookCopy("copy-2-1", "book-2", "QR-CS-001", 98, "available", "Shelf B-3"));
+                bookCopyRepository.save(new BookCopy("copy-3-1", "book-3", "QR-ALG-001", 90, "available", "Shelf B-4"));
+                System.out.println("🌱 Database book copies seeded");
             }
         };
     }

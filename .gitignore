@@ -1,37 +1,100 @@
-# Logs
-logs
+# ============================================================
+# Java / Maven
+# ============================================================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ============================================================
+# Spring Boot
+# ============================================================
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+spring-shell.log
 
-node_modules
-dist
-dist-ssr
-*.local
+# ============================================================
+# IDE — IntelliJ IDEA
+# ============================================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
 
-# Editor directories and files
+# ============================================================
+# IDE — Eclipse / STS
+# ============================================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ============================================================
+# IDE — VS Code (keep extensions.json)
+# ============================================================
 .vscode/*
 !.vscode/extensions.json
-.idea
+.vscode/settings.json
+.vscode/launch.json
+
+# ============================================================
+# Environment & Secrets (NEVER commit these)
+# ============================================================
+.env
+.env.*
+!.env.example
+application-prod.properties
+application-staging.properties
+*.keystore
+*.jks
+
+# ============================================================
+# OS Generated
+# ============================================================
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
 
-# Vite and local caches
-.vite
+# ============================================================
+# Non-Java / Legacy Frontend Artifacts (kept on disk, not tracked)
+# ============================================================
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
 .vite/*
+
+# Supabase / Edge Functions / Workers (TypeScript leftovers)
+functions/
+workers/
+supabase/.temp/
+
+# Prisma
+prisma/.env
+
+# Agent / AI configs (not project source)
+skills-lock.json
 generated-reel/
-*.zip
+academicos_prompt_pack.md
 
-# Java Build Directories
-target/
-target/*
-**/target/
-
-
+# Maven wrapper jar (downloaded automatically)
+.mvn/wrapper/maven-wrapper.jar

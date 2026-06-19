@@ -1,8 +1,9 @@
 package com.academicos.controller;
 
 import com.academicos.model.Book;
-import com.academicos.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.academicos.service.BookService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,26 +13,35 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class BookController {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookService bookService;
 
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    /** GET /api/books  or  GET /api/books?q=keyword */
     @GetMapping
-    public List<Book> getAllBooks(@RequestParam(value = "q", required = false) String query) {
-        if (query != null && !query.trim().isEmpty()) {
-            return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrDescriptionContainingIgnoreCase(
-                    query, query, query
-            );
-        }
-        return bookRepository.findAll();
+    public ResponseEntity<List<Book>> getAllBooks(
+            @RequestParam(value = "q", required = false) String query) {
+        return ResponseEntity.ok(bookService.search(query));
     }
 
+    /** GET /api/books/{id} */
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable String id) {
-        return bookRepository.findById(id).orElse(null);
+    public ResponseEntity<Book> getBookById(@PathVariable String id) {
+        return ResponseEntity.ok(bookService.findById(id));
     }
 
+    /** POST /api/books */
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.save(book);
+    public ResponseEntity<Book> createBook(@Valid @RequestBody Book book) {
+        return ResponseEntity.ok(bookService.save(book));
+    }
+
+    /** DELETE /api/books/{id} */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+        bookService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

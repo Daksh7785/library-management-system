@@ -29,3 +29,9 @@ dist-ssr
 generated-reel/
 *.zip
 
+# Java Build Directories
+target/
+target/*
+**/target/
+
+

@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vite and local caches
+.vite
+.vite/*
+generated-reel/
+*.zip
+

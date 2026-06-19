@@ -1,0 +1,29 @@
+# ============================================================
+# AcademicOS — Production Profile (PostgreSQL)
+# IMPORTANT: This file must NOT be committed to version control.
+# Copy this template to application-prod.properties and fill in real values.
+# ============================================================
+
+# PostgreSQL — fill in your actual Supabase / AWS RDS / Railway credentials
+spring.datasource.url=jdbc:postgresql://<HOST>:<PORT>/<DATABASE>
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=<USERNAME>
+spring.datasource.password=<PASSWORD>
+
+# Connection pool (HikariCP defaults are good; tune if needed)
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.connection-timeout=30000
+
+# PostgreSQL dialect
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# Use 'validate' in production — never auto-migrate in prod
+spring.jpa.hibernate.ddl-auto=validate
+
+# Disable H2 console in production
+spring.h2.console.enabled=false
+
+# Production logging (quiet)
+logging.level.com.academicos=WARN
+logging.level.org.hibernate.SQL=WARN

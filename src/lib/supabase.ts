@@ -327,6 +327,36 @@ class MockQueryBuilder {
     return this;
   }
 
+  in(column: string, values: any[]) {
+    this.filters.push(item => {
+      const val = item[column];
+      return Array.isArray(values) && values.includes(val);
+    });
+    return this;
+  }
+
+  overlaps(column: string, values: any[]) {
+    this.filters.push(item => {
+      const arr = item[column];
+      if (Array.isArray(arr)) {
+        return arr.some(v => values.includes(v));
+      }
+      return false;
+    });
+    return this;
+  }
+
+  not(column: string, operator: string, value: any) {
+    if (operator === 'in') {
+      const cleanVal = String(value).replace(/[()]/g, '');
+      const list = cleanVal.split(',').map(s => s.trim());
+      this.filters.push(item => !list.includes(String(item[column])));
+    } else {
+      this.filters.push(item => item[column] !== value);
+    }
+    return this;
+  }
+
   order(column: string, options?: { ascending: boolean }) {
     this.orderCol = column;
     this.orderAsc = options?.ascending ?? true;

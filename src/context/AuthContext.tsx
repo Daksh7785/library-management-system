@@ -143,12 +143,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updatePassword = async (password: string) => {
     await authService.updatePassword(password);
   };
-
   const demoLogin = async (role: UserRole = 'admin') => {
     setLoading(true);
-    const demoUser = await authService.signInWithDemo(role);
-    setUser(demoUser as unknown as User);
-    setLoading(false);
+    try {
+      const demoUser = await authService.signInWithDemo(role);
+      await fetchProfile(demoUser.id);
+    } catch (e) {
+      console.error('Demo login error:', e);
+      setLoading(false);
+    }
   };
 
   const value = {

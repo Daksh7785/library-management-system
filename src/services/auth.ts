@@ -57,16 +57,18 @@ export const authService = {
   },
 
   /**
-   * DEMO LOGIN
-   * Legacy demo login function for showcase purposes
-   */
   async signInWithDemo(role: string = 'admin') {
-    // This is purely for frontend demo state without backend
+    const email = `${role}@demo.academic.com`;
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: 'bypass-password'
+    });
+    if (error) throw error;
     return {
-      id: `demo-${role}-id`,
-      name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-      email: `${role}@demo.academic.com`,
-      role,
+      id: data.user.id,
+      name: data.user.user_metadata.name || `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+      email: data.user.email,
+      role: role,
     };
   },
 

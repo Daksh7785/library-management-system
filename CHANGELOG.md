@@ -1,23 +1,29 @@
 # Changelog
 
-All notable changes to the AcademicOS library management system will be documented in this file.
+All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0-beta] - 2026-06-19
+---
+
+## [1.0.0-SNAPSHOT] - 2026-06-19
 
 ### Added
-- **feat(database)**: LocalStorage mock fallback database engine to resolve network lookup errors (`net::ERR_NAME_NOT_RESOLVED`) for `aifvxjxuvsfaanbmyaet.supabase.co` in offline or disconnected environments.
-- **feat(database)**: Atomic holds database migration `20240512000000_atomic_holds.sql` to secure reservation locks.
-- **feat(ai)**: Deno-based Supabase Edge Function orchestration for the ARIA Planner system (`supabase/functions/aria-planner/index.ts`).
-- **feat(ui)**: Glassmorphism design tokens under `src/styles/design-tokens.ts`.
-- **docs**: `TESTING.md` containing manual and automated verification instructions.
-- **docs**: `requirements_overview.md` stating next phase steps and requirements.
+- **Maven Wrapper**: Bundled `mvnw` and `mvnw.cmd` for zero-install project building.
+- **Jakarta Bean Validation**: Integrated validation constraints (`@NotBlank`, `@Email`, etc.) on both entities and incoming request bodies.
+- **Service Layer**: Introduced `BookService`, `ProfileService`, and `TransactionService` to isolate database transactions from controller logic.
+- **Custom Exceptions**: Added `ResourceNotFoundException` and `DuplicateResourceException` for clean state verification.
+- **Global Error Interception**: Added `GlobalExceptionHandler` with `@ControllerAdvice` to format exception returns into standard JSON format.
+- **Request/Response DTOs**: Added `SignupRequest`, `DemoLoginRequest`, and `AuthResponse` classes.
+- **Profile configurations**: Added `application-dev.properties` (H2 database setup) and `application-prod.properties.example` (PostgreSQL setup).
 
-### Fixed
-- Chaining issues in Supabase JS calls where `.range()` and `.select()` after insertions/updates caused rendering TypeErrors.
-- Profile loading crashes on the Scanner `/scanner` interface.
+### Changed
+- **Java Platform**: Upgraded source/target JDK level to Java 21 for modern features.
+- **Spring Boot Platform**: Upgraded Parent POM to Spring Boot version 3.3.5.
+- **Entities**: Refactored `Book`, `BookCopy`, `Profile`, and `Transaction` to use native builders and properties instead of Lombok annotations to ensure JDK 25 compatibility.
+- **Transaction Dates**: Updated transaction date properties (`issueDate`, `dueDate`, `returnDate`) from `String` type to `LocalDate`.
+- **Controllers**: Refactored `ActionController`, `AuthController`, `BookController`, and `ViewController` to call service layers and use constructor injection.
+- **Git Workspace Ignore rules**: Configured `.gitignore` to block IDE, Maven cache, and build outputs, as well as legacy JS frontend files (`node_modules/`, `.vite/`, `dist/`).
 
-### Refactored
-- Updated `.gitignore` rules to isolate build environments (`.vite/`), generated recordings (`generated-reel/`), and archive ZIP files.
+### Removed
+- **Lombok dependency**: Completely removed `@Data`, `@Builder`, and other annotations to support all Java compilations (JDK 17 to JDK 25) seamlessly.

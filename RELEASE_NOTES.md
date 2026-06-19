@@ -1,35 +1,43 @@
-# Release Notes - AcademicOS (v1.0.0-beta)
+# Release Notes: v1.0.0-SNAPSHOT
 
-AcademicOS is a next-generation, full-stack, AI-powered academic and library intelligence ecosystem. This release establishes a robust offline-first fallback and wraps core service components for smooth production-grade operations.
+Welcome to the official release of the Java Spring Boot Library Management System! This release marks the completion of the migration from a legacy hybrid configuration to a 100% Java-friendly enterprise backend with Thymeleaf templates.
 
-## 🚀 Features Added
+---
 
-*   **Offline-First Mock Database (Hybrid Client)**: Implemented a robust browser-based LocalStorage database and ES6 Proxy client inside `src/lib/supabase.ts`. It detects network unreachable/offline states and seamlessly redirects all table operations (selects, inserts, updates, upserts, deletes, RPCs) to simulated storage.
-*   **Chainable Query Builder**: Refactored the `MockQueryBuilder` to support range filters (`.range()`) and correct promise resolution so that nested `.select()` calls on mutations execute successfully.
-*   **ARIA Planner Edge Function**: Created a default Deno-based Supabase Edge Function to orchestrate multi-agent planning operations.
-*   **Atomic Holds Migration**: Added migration schema `20240512000000_atomic_holds.sql` to manage transactional locking for book reservations and avoid double-checkout race conditions.
-*   **Visual Design Tokens**: Introduced HSL-based Tailwind and CSS design tokens in `src/styles/design-tokens.ts` for clean dark-mode glassmorphism rendering.
+## Key Highlights
 
-## 🐛 Bugs Fixed
+### 1. Pure Java & Maven Architecture
+* **Java 21 Upgrade**: Targets modern LTS features and ensures JDK 25 compatibility.
+* **Lombok Removal**: Replaced all Lombok dependency features with standard Java patterns (explicit encapsulation and builder classes) to resolve annotation processor failures on JDK 25.
+* **Maven Wrapper Integration**: Bundled Maven Wrapper (`mvnw` and `mvnw.cmd`) for zero-install, repeatable builds.
 
-*   **Supabase Host Resolution Failures**: Resolved console crash scenarios where `net::ERR_NAME_NOT_RESOLVED` on the remote placeholder URL halted frontend rendering. The client now falls back dynamically to LocalStorage.
-*   **Chaining TypeErrors**: Fixed exceptions where `.range()` and deferred `.select()` properties were accessed as undefined functions.
-*   **Resource Scanner Rendering crashes**: Fixed profiles database lookup errors that prevented scanner routes from loading.
+### 2. Enhanced JPA Entity Layer
+* Added explicit `@Column` constraint mapping (precision, length, nullability) to all database models (`Book`, `BookCopy`, `Profile`, `Transaction`).
+* Introduced Jakarta Bean Validation (`@NotBlank`, `@Email`, `@Min`, `@DecimalMin`) for server-side verification of fields.
+* Refactored `Transaction` model date fields from `String` to standard `LocalDate`.
 
-## 📈 Performance Enhancements
+### 3. Service Layer Abstraction
+* Created `BookService`, `ProfileService`, and `TransactionService` to isolate database transactions and business rules from web routing controllers.
 
-*   **Zero-latency Reads**: Direct LocalStorage mapping speeds up database fetches for pages such as Dashboard and Catalog, dropping query times to <5ms in offline mode.
-*   **Optimized .gitignore rules**: Excluded heavy compiler caches (`.vite/`), generated reel artifacts, and ZIP files to keep local workspace size minimal.
+### 4. Robust Controller & DTO Refactoring
+* Replaced direct repository access in `ActionController`, `AuthController`, `BookController`, and `ViewController` with service layer delegators.
+* Introduced structured request/response DTOs: `SignupRequest`, `DemoLoginRequest`, and `AuthResponse`.
 
-## 🛡️ Security Updates
+### 5. Centralized Exception Handling
+* Configured `GlobalExceptionHandler` with `@ControllerAdvice` to intercept errors across all endpoints and return standardized JSON objects.
+* Added custom domain exception classes: `ResourceNotFoundException` (HTTP 404) and `DuplicateResourceException` (HTTP 409).
 
-*   **Safe Bypass Authentication**: Configured secure demo logins using mock identity profiles (`demo-student-id`, `demo-teacher-id`, `demo-admin-id`) preventing test environments from exposing live credentials.
+### 6. Profile-Based Configuration
+* Created profile-driven setup with `application-dev.properties` (pre-configured for H2 in-memory storage) and `application-prod.properties.example` (PostgreSQL setup).
 
-## 📝 Documentation Updates
+---
 
-*   **TESTING.md**: Added detailed verification guides for mock database transitions, scanner integration, and catalog testing.
-*   **requirements_overview.md**: Documented pending requirements, local environment keys, and execution plans.
+## Setup & Running
 
-## ⚠️ Known Issues
+Please refer to the updated [README.md](file:///c:/Users/ASUS/Desktop/librarymangementsystem/README.md) for full setup instructions.
 
-*   **Meilisearch & Redis Sync**: When running completely offline, remote Meilisearch indexes and background BullMQ Redis queues are bypassed and must be run locally to sync.
+* Run in Dev Mode:
+  ```bash
+  .\mvnw.cmd spring-boot:run
+  ```
+* H2 Console: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
